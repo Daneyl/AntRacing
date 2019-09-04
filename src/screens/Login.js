@@ -6,8 +6,8 @@ import Input from '../components/Input';
 import {colors, fonts} from '../global-styles';
 
 const Login = () => {
-  const [email, setEmail] = useState('test@test.com');
-  const [password, setPassword] = useState('tester');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [checkForSavedUser,setCheckingForSavedUser] = useState(false);
