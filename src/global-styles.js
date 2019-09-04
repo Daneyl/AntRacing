@@ -10,7 +10,7 @@ export const colors = {
   solitude: '#E6ECF5',
   commentBackground: '#fafbfd',
   linkedinBlue: '#0077B5',
-  parrotGreen: '#57B436',
+  parrotGreen: '#eef7eb',
   errorRed: '#CF3519',
   background: '#EDF2F6',
   red: '#B03A2E',

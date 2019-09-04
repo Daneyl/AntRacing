@@ -1,21 +1,25 @@
 // @flow
-import React from 'react';
-import {ActivityIndicator, FlatList} from 'react-native';
+import React, {useEffect, useRef, useCallback} from 'react';
+import {ActivityIndicator, FlatList, Animated} from 'react-native';
+import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
+
 import AntCard from './AntCard';
+import AntsWalking from '../../../components/AntsWalking';
 import {colors, fonts} from '../../../global-styles';
 
 type Props = {
   ants: Array,
-  winLikelyhoods: Array<number>,
 };
 
-const AntsStats = ({ants, winLikelyhoods}: Props) => {
+const AntsStats = ({ants}: Props) => {
   const isLoading = ants.length === 0;
+  const isRaceFinished = useSelector(state => state.ants.isRaceFinished);
+
   return (
     <Container>
       <HeadingContainer>
-        <Heading>Ants</Heading>
+        <Heading>Ants Racing</Heading>
       </HeadingContainer>
       <ScrollableArea
         contentContainerStyle={{
@@ -26,20 +30,28 @@ const AntsStats = ({ants, winLikelyhoods}: Props) => {
         {isLoading && <ActivityIndicator size="large" color="grey" />}
         {!isLoading && (
           <FlatList
-            contentContainerStyle={{paddingVertical: 20, paddingHorizontal: 10}}
+            contentContainerStyle={{
+              paddingVertical: 20,
+              paddingHorizontal: 10,
+            }}
             style={{flex: 1, width: '100%'}}
             data={ants}
-            keyExtractor={(_, index) => String(index)}
+            extraData={ants}
+            keyExtractor={item => String(item.name)}
             renderItem={({item, index}) => (
               <AntCard
-                key={index}
+                isWinner={isRaceFinished && index === 0}
+                key={item.name}
                 data={item}
-                percent={winLikelyhoods[index]}
+                percent={item.winLikelyhood}
               />
             )}
           />
         )}
       </ScrollableArea>
+      <BottomFixed>
+        <AntsWalking />
+      </BottomFixed>
     </Container>
   );
 };
@@ -59,7 +71,7 @@ const ScrollableArea = styled.ScrollView`
 
 const HeadingContainer = styled.View`
   width: 100%;
-  padding: 20px;
+  padding: 10px;
   background-color: ${colors.commentBackground};
   justify-content: center;
   align-items: center;
@@ -72,4 +84,12 @@ const Heading = styled.Text`
   font-family: ${fonts.oswald};
 `;
 
+const BottomFixed = styled.View`
+  width: 100%;
+  height: 40px;
+  padding: 0 10px;
+  background-color: ${colors.white};
+`;
+
 export default AntsStats;
+    
