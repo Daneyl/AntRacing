@@ -1,7 +1,11 @@
+// @flow
+
 import React, {useState, useEffect, useCallback} from 'react';
 import styled from 'styled-components/native';
+import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Actions} from 'react-native-router-flux';
+import {actions} from '../modules/auth';
 import Input from '../components/Input';
 import {colors, fonts} from '../global-styles';
 
@@ -10,7 +14,14 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [checkForSavedUser,setCheckingForSavedUser] = useState(false);
+
+  const dispatch = useDispatch();
+  const checkForUser = (hasChecked: boolean) =>
+    dispatch(actions.checkUserInStorage(hasChecked));
+
+  const hasChecked = useSelector(
+    state => state.auth.hasCheckedForUserInStorage,
+  );
 
   const validUsername = 'test@test.com' === email;
   const validPassword = 'tester' === password;
@@ -33,16 +44,17 @@ const Login = () => {
     const savedUser = await AsyncStorage.getItem('validUser');
     if (savedUser !== null) {
       Actions.main();
+    } else {
+      checkForUser(true);
     }
-    setCheckingForSavedUser(true);
   });
 
   useEffect(() => {
     checkForLoggedInUser();
   }, []);
 
-  if(!checkForSavedUser){
-    return null
+  if (!hasChecked) {
+    return null;
   }
 
   return (

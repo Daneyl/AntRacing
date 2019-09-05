@@ -1,0 +1,1 @@
+export const CHECK_FOR_USER_IN_STORAGE = 'check_for_user_in_storage'; 

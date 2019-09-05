@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import styled from 'styled-components/native';
 import {actions} from '../modules/ants';
+import {actions as authActions} from '../modules/auth';
 import AntsStats from '../modules/ants/components/AntsStats';
 import {colors, fonts} from '../global-styles';
 
@@ -13,6 +14,8 @@ const Home = () => {
   const dispatch = useDispatch();
   const loadAnts = () => dispatch(actions.loadAnts());
   const reset = () => dispatch(actions.resetRace());
+
+  const checkForUser = (hasChecked: boolean) => dispatch(authActions.checkUserInStorage(hasChecked));
 
   const data = useSelector(state => state.ants.antsList);
   const isRaceFinished = useSelector(state => state.ants.isRaceFinished);
@@ -29,6 +32,7 @@ const Home = () => {
 
   async function onLogout(){
     await AsyncStorage.removeItem('validUser');
+    checkForUser(false);
     Actions.pop();
   }
 
